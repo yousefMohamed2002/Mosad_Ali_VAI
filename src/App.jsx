@@ -9,19 +9,15 @@ import {
   UserPlus 
 } from 'lucide-react';
 
-/**
- * Mosad Ali Portfolio 
- * Feature: VCard Contact Saving
- * Default Language: English
- */
-
 const App = () => {
-  // تم ضبط اللغة الافتراضية إلى الإنجليزية
   const [lang, setLang] = useState('en');
   const isRtl = lang === 'ar';
 
   const userData = {
-    nameToSave: "Mosad Ali", 
+    firstName: "Mosad",
+    lastName: "Ali",
+    fullNameEn: "Mosad Ali",
+    fullNameAr: "مسعد علي",
     phone: "+201119222530",
     whatsapp: "https://wa.me/201119222530",
     email: "mosad.ali@vaidevelopments.com", 
@@ -29,20 +25,26 @@ const App = () => {
   };
 
   const downloadVCard = () => {
+    // اختيار الاسم بناءً على اللغة الحالية لضمان الحفظ الصحيح
+    const displayName = isRtl ? userData.fullNameAr : userData.fullNameEn;
+    const lastName = isRtl ? "" : userData.lastName;
+    const firstName = isRtl ? userData.fullNameAr : userData.firstName;
+
     const vcardContent = `BEGIN:VCARD
 VERSION:3.0
-FN:${userData.nameToSave}
+FN:${displayName}
+N:${lastName};${firstName};;;
 TEL;TYPE=CELL:${userData.phone}
-EMAIL:${userData.email}
+EMAIL;TYPE=INTERNET:${userData.email}
 ORG:VAI Development
 TITLE:Head of Sales
 END:VCARD`;
 
-    const blob = new Blob([vcardContent], { type: 'text/vcard' });
+    const blob = new Blob([vcardContent], { type: 'text/vcard;charset=utf-8' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `${userData.nameToSave}.vcf`);
+    link.setAttribute('download', `${displayName}.vcf`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -80,14 +82,12 @@ END:VCARD`;
       }`}
       dir={isRtl ? 'rtl' : 'ltr'}
     >
-      {/* Background Glow */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/10 blur-[100px]"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-green-600/10 blur-[100px]"></div>
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
-        {/* Nav */}
         <nav className="flex justify-between items-center mb-12">
           <div className="flex items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold tracking-[0.2em]">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -102,7 +102,6 @@ END:VCARD`;
         </nav>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Profile Section */}
           <div className="md:col-span-2 bg-[#0f0f0f] border border-white/5 rounded-[2.5rem] p-10 flex flex-col md:flex-row gap-8 items-center">
             <div className="relative">
               <div className="w-32 h-32 rounded-3xl overflow-hidden ring-4 ring-white/5 bg-gradient-to-br from-gray-800 to-black">
@@ -120,7 +119,6 @@ END:VCARD`;
             </div>
           </div>
 
-          {/* Contact Grid */}
           <div className="flex flex-col gap-4">
             <button
               onClick={downloadVCard}
@@ -150,7 +148,6 @@ END:VCARD`;
             </div>
           </div>
 
-          {/* Skills */}
           <div className="bg-[#0f0f0f] border border-white/5 rounded-[2.5rem] p-8">
             <h3 className="text-[10px] font-black text-gray-600 uppercase mb-6 tracking-[0.3em]">
               {t.expertise}
@@ -164,7 +161,6 @@ END:VCARD`;
             </div>
           </div>
 
-          {/* Bottom Actions */}
           <div className="md:col-span-2 flex gap-4">
             <a
               href="#" 
